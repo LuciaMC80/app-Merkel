@@ -595,9 +595,9 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     // --- Clasificación y pronóstico ---
     var cl = [];
     cl.push(it('T (AJCC‑8 y UICC‑8): Tis in situ; T1 ≤ 2 cm; T2 > 2 y ≤ 5 cm; T3 > 5 cm; T4 invasión de estructuras extradérmicas profundas (fascia, músculo esquelético, cartílago o hueso); T0 sin primario identificable. Se usa el diámetro clínico máximo; el histológico infraestima el tamaño por la retracción de la pieza.' + este(c.T || (isT0() ? '' : 'falta el diámetro para asignar la T')), ['AJCC‑8', 'UICC‑9', 'CAP 2026']));
-    cl.push(it('N: cN1 adenopatía regional clínica o radiológica. pN1a(sn) micrometástasis detectada sólo en el ganglio centinela; pN1a micrometástasis en la linfadenectomía; pN1b metástasis clínica o radiológica confirmada al microscopio. N2 metástasis en tránsito sin afectación ganglionar; N3 en tránsito con afectación ganglionar (tumor discontinuo entre el primario y la cuenca regional o distal al primario).' + este(c.Nl), ['AJCC‑8', 'UICC‑9']));
+    cl.push(it('N: cN1 adenopatía regional clínica o radiológica. pN1a(sn) micrometástasis detectada sólo en el ganglio centinela; pN1a micrometástasis en la linfadenectomía; pN1b metástasis clínica o radiológica confirmada al microscopio. N2 metástasis en tránsito sin afectación ganglionar; N3 en tránsito con afectación ganglionar (tumor discontinuo entre el primario y el territorio ganglionar regional o distal al primario).' + este(c.Nl), ['AJCC‑8', 'UICC‑9']));
     cl.push(it('M: M1a piel, tejido subcutáneo o ganglios no regionales; M1b pulmón; M1c otras localizaciones.' + (isM1() ? este(S.m) : ''), ['AJCC‑8', 'UICC‑9']));
-    cl.push(it('Estadios clínicos: 0 TisN0 · I T1N0 · IIA T2–3N0 · IIB T4N0 · III cualquier T N1–3 · IV M1. Estadios patológicos: igual hasta IIB; IIIA T1–4 N1a(sn) o N1a, o T0 N1b (primario desconocido); IIIB T1–4 N1b, N2 o N3; IV M1. El estadio patológico exige estudio histológico de la cuenca ganglionar (centinela o linfadenectomía).' + este(c.st ? (c.path ? 'estadio patológico ' : 'estadio clínico ') + c.st : ''), ['AJCC‑8', 'UICC‑9']));
+    cl.push(it('Estadios clínicos: 0 TisN0 · I T1N0 · IIA T2–3N0 · IIB T4N0 · III cualquier T N1–3 · IV M1. Estadios patológicos: igual hasta IIB; IIIA T1–4 N1a(sn) o N1a, o T0 N1b (primario desconocido); IIIB T1–4 N1b, N2 o N3; IV M1. El estadio patológico exige estudio histológico del territorio ganglionar (centinela o linfadenectomía).' + este(c.st ? (c.path ? 'estadio patológico ' : 'estadio clínico ') + c.st : ''), ['AJCC‑8', 'UICC‑9']));
     cl.push(it('La UICC 9.ª edición (2025) mantiene las mismas categorías T, N y M y los mismos estadios. ESMO recomienda la UICC 8.ª edición; EADO, la AJCC/UICC 8.ª edición.', ['UICC‑9', 'ESMO', 'EADO'], 'info'));
     cl.push(it('Supervivencia global a 5 años en la serie de la AJCC‑8 (9387 pacientes): estadio patológico I 62,8 %, IIA 54,6 %, IIB 34,8 %, IIIA 40,3 %, IIIB 26,8 %; clínico I 45 %, IIA 30,9 %, IIB 27,3 %, III 26,8 %; IV 13,5 %. Primario desconocido con afectación ganglionar: 42,2 %. Series recientes muestran cifras más altas (72,6 % en enfermedad local y 62,7 % en ganglionar).', ['EADO']));
     cl.push(it('Factores de alto riesgo de recidiva (basta uno): tamaño ≥ 2 cm, inmunodepresión crónica, cabeza y cuello, ganglios patológicamente positivos o estado ganglionar no evaluado correctamente, e invasión linfovascular.' + este(c.rf.length ? c.rf.join(', ').toLowerCase() : (c.pending ? '' : 'ninguno')), ['EADO', 'NCCN 2021 · cit. EADO']));
@@ -627,7 +627,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
       cir.push(it('No candidato a cirugía: radioterapia definitiva del primario.', ['ESMO V, B', 'EADO C, 3–4']));
       if (S.nst !== 'pos' && !S.itm) cir.push(it('Con ganglios negativos y candidato a inmunoterapia, considerar preferentemente un anti‑PD‑1 y reevaluar en comité la respuesta y la posibilidad de cirugía.', ['ESMO III, A']));
     } else {
-      cir.push(it('Tratamiento estándar de la enfermedad localizada: exéresis local amplia con estudio postoperatorio de los márgenes, seguida de radioterapia adyuvante del lecho y manejo de la cuenca ganglionar.', ['ESMO IV, B', 'EADO B, 3']));
+      cir.push(it('Tratamiento estándar de la enfermedad localizada: exéresis local amplia con estudio postoperatorio de los márgenes, seguida de radioterapia adyuvante del lecho y manejo del territorio ganglionar.', ['ESMO IV, B', 'EADO B, 3']));
       cir.push(it('Margen clínico de 1–2 cm. Si no es técnicamente posible, un margen de 0,5–1 cm con radioterapia adyuvante también es aceptable, por ejemplo para preservar la estética facial o la función cerca de articulaciones.', ['ESMO IV, B']));
       cir.push(it('Exéresis completa con 1 cm de margen clínico seguida de radioterapia del lecho como tratamiento preferente. Si no puede darse radioterapia, márgenes de hasta 2 cm. Un margen < 1 cm con radioterapia adyuvante es aceptable cuando la cirugía amplia es difícil o retrasaría la radioterapia.', ['EADO B, 3']));
       cir.push(it('Márgenes de 1 cm suelen bastar en lesiones pequeñas; en tumores > 2 cm, 2 cm si es posible. La exéresis completa tiene prioridad sobre la estética.' + (d !== null && d > 20 ? ' En este caso el tumor mide más de 2 cm.' : ''), ['AEDV'], d !== null && d > 20 ? 'warn' : 'std'));
@@ -666,38 +666,38 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
       rt.push(it('Evidencia: en un metaanálisis de más de 17 000 pacientes (estadios I–III) la radioterapia adyuvante se asoció a mejor supervivencia global (HR 0,81) y control locorregional; en la National Cancer Database, a mejor supervivencia en los estadios I (HR 0,71) y II (HR 0,77), pero no en el III.', ['ESMO', 'AEDV']));
       if (inm) rt.push(it('En el inmunodeprimido la radioterapia adyuvante se da a dosis estándar: no hay diferencias de supervivencia según el estado inmunitario.', ['EADO']));
     } else {
-      rt.push(it('Primario desconocido: radioterapia de la cuenca ganglionar tras la linfadenectomía, o definitiva si no es operable (véase el manejo ganglionar).', ['ESMO III, B']));
+      rt.push(it('Primario desconocido: radioterapia del territorio ganglionar tras la linfadenectomía, o definitiva si no es operable (véase el manejo ganglionar).', ['ESMO III, B']));
     }
     secs.push({ t: 'Radioterapia', items: rt });
 
     // --- Ganglio centinela y manejo ganglionar ---
     var gg = [];
-    gg.push(it('Explorar todas las cuencas ganglionares y hacer ecografía de la cuenca regional antes de la biopsia del ganglio centinela.', ['EADO B, 3–4']));
+    gg.push(it('Explorar todos los territorios ganglionares y hacer ecografía del territorio ganglionar regional antes de la biopsia del ganglio centinela.', ['EADO B, 3–4']));
     if (S.nst === 'sosp') gg.push(it('Adenopatía sospechosa clínica o radiológicamente: confirmar con PAAF o biopsia con aguja gruesa antes de decidir la cirugía.', ['EADO', 'ESMO'], 'warn'));
     if (S.nst === 'neg' && !isT0() && !isM1()) {
       gg.push(it('Biopsia del ganglio centinela en todos los pacientes sin afectación ganglionar clínica ni radiológica y aptos para un tratamiento radical, con independencia del tamaño del tumor. Es el procedimiento de estadificación más fiable: detecta micrometástasis en un tercio de los pacientes (~20 % en T1 y 40–50 % en T2).', ['ESMO III, A', 'EADO B, 2–3', 'AEDV D']));
       gg.push(it('El tamaño del tumor no debe decidir si se hace la biopsia del ganglio centinela: incluso los tumores ≤ 1 cm tienen riesgo de afectación ganglionar (14 % a 0,5 cm).', ['AEDV C']));
       gg.push(it('No se ha demostrado que mejore la supervivencia, pero un estado ganglionar patológico negativo tiene mejor pronóstico que el clínico y evita tratamientos adyuvantes innecesarios.', ['AEDV D', 'ESMO']));
-      gg.push(it('Falsos negativos en torno al 17 %, sobre todo en inmunodeprimidos y en tumores de cabeza y cuello o de la línea media del tronco (drenaje aberrante o varias cuencas). En localizaciones difíciles, usar SPECT‑TC.', ['ESMO III, A'], S.loc === 'hn' || inm ? 'warn' : 'std'));
+      gg.push(it('Falsos negativos en torno al 17 %, sobre todo en inmunodeprimidos y en tumores de cabeza y cuello o de la línea media del tronco (drenaje aberrante o varios territorios ganglionares). En localizaciones difíciles, usar SPECT‑TC.', ['ESMO III, A'], S.loc === 'hn' || inm ? 'warn' : 'std'));
       gg.push(it('Estudio del ganglio centinela: al menos dos niveles de hematoxilina‑eosina y una tinción inmunohistoquímica antes de considerarlo negativo. Cualquier depósito, incluidas las células tumorales aisladas, se considera positivo.', ['CAP 2026']));
       if (S.sln === 'neg') {
-        gg.push(it('Ganglio centinela negativo: la observación es una opción. Si hay riesgo de falso negativo (cabeza y cuello, exéresis amplia previa, problemas técnicos, inmunosupresión profunda), puede considerarse la radioterapia de la cuenca; decisión del comité de un centro de referencia.', ['ESMO IV, B', 'AEDV B'], S.loc === 'hn' || inm ? 'warn' : 'std'));
+        gg.push(it('Ganglio centinela negativo: la observación es una opción. Si hay riesgo de falso negativo (cabeza y cuello, exéresis amplia previa, problemas técnicos, inmunosupresión profunda), puede considerarse la radioterapia del territorio ganglionar; decisión del comité de un centro de referencia.', ['ESMO IV, B', 'AEDV B'], S.loc === 'hn' || inm ? 'warn' : 'std'));
       } else if (S.sln === 'pos') {
-        gg.push(it('Ganglio centinela positivo: radioterapia adyuvante de la cuenca sola (50–55 Gy) o combinada con linfadenectomía, preferible a la linfadenectomía sola, que queda como opción si no puede darse radioterapia.', ['EADO GCP', 'ESMO IV, B'], 'warn'));
+        gg.push(it('Ganglio centinela positivo: radioterapia adyuvante del territorio ganglionar sola (50–55 Gy) o combinada con linfadenectomía, preferible a la linfadenectomía sola, que queda como opción si no puede darse radioterapia.', ['EADO GCP', 'ESMO IV, B'], 'warn'));
         gg.push(it('En un estudio prospectivo de 163 pacientes no hubo diferencias de supervivencia entre linfadenectomía y radioterapia. En pacientes más jóvenes (< 75 años) y con poca comorbilidad, la combinación de radioterapia y linfadenectomía puede ser beneficiosa.', ['ESMO', 'EADO']));
-        if (S.lnd && (S.nmul || S.ene)) gg.push(it('Linfadenectomía con varios ganglios afectos o extensión extraganglionar: radioterapia postoperatoria de la cuenca.', ['ESMO III, B', 'AEDV B'], 'warn'));
-        else if (!S.lnd) gg.push(it('Si no se hace linfadenectomía, radioterapia de la cuenca ganglionar.', ['AEDV B']));
+        if (S.lnd && (S.nmul || S.ene)) gg.push(it('Linfadenectomía con varios ganglios afectos o extensión extraganglionar: radioterapia postoperatoria del territorio ganglionar.', ['ESMO III, B', 'AEDV B'], 'warn'));
+        else if (!S.lnd) gg.push(it('Si no se hace linfadenectomía, radioterapia del territorio ganglionar.', ['AEDV B']));
       } else if (S.sln === 'no') {
-        gg.push(it('Sin biopsia del ganglio centinela (contraindicación, rechazo o dificultad técnica, típica en cabeza y cuello): radioterapia de la cuenca ganglionar si existe riesgo de enfermedad subclínica.', ['AEDV B', 'ESMO IV, B', 'NCCN · cit. AEDV'], 'warn'));
-        gg.push(it('Un ensayo aleatorizado, cerrado precozmente, mostró que la radioterapia profiláctica de la cuenca reduce la recidiva regional (0 % frente a 16,7 %), sin mejorar la supervivencia global.', ['AEDV', 'EADO'], 'info'));
+        gg.push(it('Sin biopsia del ganglio centinela (contraindicación, rechazo o dificultad técnica, típica en cabeza y cuello): radioterapia del territorio ganglionar si existe riesgo de enfermedad subclínica.', ['AEDV B', 'ESMO IV, B', 'NCCN · cit. AEDV'], 'warn'));
+        gg.push(it('Un ensayo aleatorizado, cerrado precozmente, mostró que la radioterapia profiláctica del territorio ganglionar reduce la recidiva regional (0 % frente a 16,7 %), sin mejorar la supervivencia global.', ['AEDV', 'EADO'], 'info'));
       }
     }
     if ((macroN() || isT0()) && !isM1()) {
       if (S.cur !== 'no') {
-        gg.push(it('Metástasis ganglionar clínica o radiológica: linfadenectomía terapéutica de la cuenca afectada, seguida de radioterapia postoperatoria, sobre todo si hay varios ganglios afectos o extensión extraganglionar. La radioterapia tras la linfadenectomía debe discutirse en comité.', ['EADO GCP', 'ESMO III, B', 'AEDV B'], S.nmul || S.ene ? 'warn' : 'std'));
+        gg.push(it('Metástasis ganglionar clínica o radiológica: linfadenectomía terapéutica del territorio ganglionar afectado, seguida de radioterapia postoperatoria, sobre todo si hay varios ganglios afectos o extensión extraganglionar. La radioterapia tras la linfadenectomía debe discutirse en comité.', ['EADO GCP', 'ESMO III, B', 'AEDV B'], S.nmul || S.ene ? 'warn' : 'std'));
         gg.push(it('Antes de la cirugía, estudio de imagen seccional. La extensión de la linfadenectomía sigue la guía ESMO de melanoma. Complicaciones (linfedema, infección, necrosis, dehiscencia): 26 % en la ingle frente a 9 % en la axila.', ['ESMO']));
       } else {
-        gg.push(it('Enfermedad ganglionar inoperable o paciente no operable: radioterapia definitiva de la cuenca.', ['ESMO III, B']));
+        gg.push(it('Enfermedad ganglionar inoperable o paciente no operable: radioterapia definitiva del territorio ganglionar.', ['ESMO III, B']));
       }
       if (isT0()) gg.push(it('Primario desconocido (T0 N1b): confirmar el diagnóstico con biopsia, PET‑TC para descartar enfermedad a distancia y tratar los ganglios como en el estadio IIIB. Tiene mejor pronóstico que la afectación ganglionar con primario conocido.', ['ESMO']));
     }
@@ -706,13 +706,13 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
       gg.push(it('La radioterapia está indicada en las metástasis en tránsito que no pueden extirparse.', ['EADO']));
     }
     if (nodePos() && !isM1()) gg.push(it('Los pacientes con afectación ganglionar deben valorarse para ensayos clínicos de tratamiento sistémico neoadyuvante o adyuvante: ni la radioterapia adyuvante ni la quimioterapia han demostrado mejorar la supervivencia global.', ['ESMO III, A']));
-    if (isM1()) gg.push(it('Enfermedad a distancia: el manejo ganglionar es paliativo y se decide en comité (radioterapia de la cuenca sintomática).', ['EADO C, 3–4']));
+    if (isM1()) gg.push(it('Enfermedad a distancia: el manejo ganglionar es paliativo y se decide en comité (radioterapia del territorio ganglionar sintomático).', ['EADO C, 3–4']));
     secs.push({ t: 'Ganglio centinela y manejo ganglionar', items: gg });
 
     // --- Estudio de extensión ---
     var ex = [];
-    ex.push(it('Exploración de toda la piel (satélites, metástasis en tránsito, otros cánceres cutáneos) y de todas las cuencas ganglionares, con valoración de la comorbilidad y la esperanza de vida.', ['ESMO III, A', 'EADO B, 3–4']));
-    ex.push(it('Ecografía de la cuenca ganglionar regional (8–14 MHz) en todos los pacientes con estadio clínico I–II.', ['EADO B, 3–4', 'ESMO']));
+    ex.push(it('Exploración de toda la piel (satélites, metástasis en tránsito, otros cánceres cutáneos) y de todos los territorios ganglionares, con valoración de la comorbilidad y la esperanza de vida.', ['ESMO III, A', 'EADO B, 3–4']));
+    ex.push(it('Ecografía del territorio ganglionar regional (8–14 MHz) en todos los pacientes con estadio clínico I–II.', ['EADO B, 3–4', 'ESMO']));
     ex.push(it('Imagen de cuerpo entero obligatoria: PET‑TC con FDG, preferible si está disponible, o TC con contraste de tórax, abdomen y pelvis (y cabeza y cuello si el primario está en esa región). La PET‑TC reestadifica al 16,8 % frente al 6,9 % de la TC.', ['ESMO III, A', 'EADO B, 3–4', 'AEDV B']));
     if (!nodePos() && !isM1() && !S.itm && !isT0()) ex.push(it('No se recomienda la imagen cerebral rutinaria en los estadios I–II asintomáticos (las metástasis cerebrales aparecen en el 5 %). RM sólo si hay síntomas.', ['EADO B, 3–4']));
     else ex.push(it('Estadio III o superior, o síntomas neurológicos: añadir RM cerebral.', ['EADO']));
@@ -755,7 +755,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     if (inm) {
       var im = [];
       im.push(it('Curso más agresivo: menor supervivencia específica (40 % frente a 74 % a 3 años) y más recidivas (HR 3,67), con independencia de la comorbilidad. Abordaje siempre multidisciplinar.', ['EADO']));
-      im.push(it('El ganglio centinela es menos fiable; si es negativo, valorar la radioterapia de la cuenca.', ['ESMO III, A', 'ESMO IV, B']));
+      im.push(it('El ganglio centinela es menos fiable; si es negativo, valorar la radioterapia del territorio ganglionar.', ['ESMO III, A', 'ESMO IV, B']));
       im.push(it('Radioterapia adyuvante a dosis estándar. La radioterapia curativa o paliativa de la enfermedad macroscópica parece menos eficaz, y se ha propuesto intensificarla.', ['EADO']));
       im.push(it('Valorar caso a caso reducir la inmunosupresión. El paso a inhibidores de mTOR no ha demostrado beneficio en el carcinoma de Merkel.', ['EADO', 'AEDV']));
       if (S.inm === 'tos' && adv) im.push(it('Inhibidores de PD‑(L)1 en trasplantados: datos escasos; mejores resultados en trasplante renal que hepático y función del injerto conservada en dos tercios. Decidir con el equipo de trasplante.', ['EADO'], 'warn'));
@@ -845,7 +845,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     var rb = vRTbed(c);
     if (rb.c !== 'na') steps.push('Radioterapia del lecho (' + rb.v + '): ' + rb.d);
     var ng = vNodal(c);
-    if (ng.c !== 'na') steps.push('Cuenca ganglionar (' + ng.v + '): ' + ng.d);
+    if (ng.c !== 'na') steps.push('Territorio ganglionar (' + ng.v + '): ' + ng.d);
     var sy = vSys(c);
     if (sy.c !== 'no') steps.push('Tratamiento sistémico: ' + sy.v + '. ' + sy.d);
     if (S.inm !== 'no') steps.push('Inmunodepresión: valorar con su equipo reducirla; seguimiento intensivo.');
@@ -860,11 +860,11 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     if (isM1()) return { v: 'No indicada', d: 'Enfermedad a distancia: no modifica el manejo.', c: 'no' };
     if (S.nst === 'pos') return { v: 'No indicada', d: 'Metástasis ganglionar clínica confirmada: linfadenectomía terapéutica.', c: 'no' };
     if (S.nst === 'sosp') return { v: 'Confirmar antes', d: 'Adenopatía sospechosa: PAAF o biopsia con aguja gruesa; si es negativa, ganglio centinela.', c: 'maybe' };
-    if (S.cur === 'no') return { v: 'No indicada', d: 'No candidato a tratamiento radical: radioterapia definitiva de la cuenca si procede.', c: 'no' };
-    if (S.sln === 'neg') return { v: 'Negativo', d: 'Observación de la cuenca' + (S.loc === 'hn' || S.inm !== 'no' ? '; por el riesgo de falso negativo (' + (S.loc === 'hn' ? 'cabeza y cuello' : 'inmunodepresión') + '), valorar radioterapia de la cuenca en comité.' : '.'), c: S.loc === 'hn' || S.inm !== 'no' ? 'maybe' : 'ok' };
-    if (S.sln === 'pos') return { v: 'Positivo', d: 'Micrometástasis, ' + (S.lnd ? 'pN1a' : 'pN1a(sn)') + ': radioterapia de la cuenca ± linfadenectomía.', c: 'alert' };
-    if (S.sln === 'no') return { v: 'No realizada', d: 'Sin estadificación patológica: radioterapia de la cuenca ganglionar (AEDV, ESMO).', c: 'maybe' };
-    if (S.frag) return { v: 'Individualizar', d: 'Recomendada si es apto para tratamiento radical; si no, radioterapia de la cuenca.', c: 'maybe' };
+    if (S.cur === 'no') return { v: 'No indicada', d: 'No candidato a tratamiento radical: radioterapia definitiva del territorio ganglionar si procede.', c: 'no' };
+    if (S.sln === 'neg') return { v: 'Negativo', d: 'Observación del territorio ganglionar' + (S.loc === 'hn' || S.inm !== 'no' ? '; por el riesgo de falso negativo (' + (S.loc === 'hn' ? 'cabeza y cuello' : 'inmunodepresión') + '), valorar radioterapia del territorio ganglionar en comité.' : '.'), c: S.loc === 'hn' || S.inm !== 'no' ? 'maybe' : 'ok' };
+    if (S.sln === 'pos') return { v: 'Positivo', d: 'Micrometástasis, ' + (S.lnd ? 'pN1a' : 'pN1a(sn)') + ': radioterapia del territorio ganglionar ± linfadenectomía.', c: 'alert' };
+    if (S.sln === 'no') return { v: 'No realizada', d: 'Sin estadificación patológica: radioterapia del territorio ganglionar (AEDV, ESMO).', c: 'maybe' };
+    if (S.frag) return { v: 'Individualizar', d: 'Recomendada si es apto para tratamiento radical; si no, radioterapia del territorio ganglionar.', c: 'maybe' };
     return { v: 'Indicada', d: 'En todo carcinoma de Merkel sin afectación ganglionar clínica ni radiológica, con independencia del tamaño (ESMO III, A; EADO B; AEDV).' + (S.loc === 'hn' ? ' En cabeza y cuello, más falsos negativos: SPECT‑TC.' : ''), c: 'ok' };
   }
 
@@ -872,7 +872,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     if (S.nst === 'sosp') return { v: 'Ecografía + PAAF/BAG', d: 'Confirmar la adenopatía sospechosa; PET‑TC de cuerpo entero.', c: 'maybe' };
     var hi = nodePos() || isM1() || S.itm || isT0();
     if (hi) return { v: 'PET‑TC + RM cerebral', d: 'PET‑TC con FDG (o TC con contraste) de cuerpo entero y RM cerebral en el estadio III–IV' + (macroN() || isT0() ? '; imagen seccional antes de la linfadenectomía.' : '.'), c: 'ok' };
-    return { v: 'Ecografía + PET‑TC', d: 'Ecografía de la cuenca regional y PET‑TC con FDG (o TC con contraste de tórax, abdomen y pelvis' + (S.loc === 'hn' ? ' y cuello' : '') + '). Sin imagen cerebral rutinaria si está asintomático.', c: 'ok' };
+    return { v: 'Ecografía + PET‑TC', d: 'Ecografía del territorio ganglionar regional y PET‑TC con FDG (o TC con contraste de tórax, abdomen y pelvis' + (S.loc === 'hn' ? ' y cuello' : '') + '). Sin imagen cerebral rutinaria si está asintomático.', c: 'ok' };
   }
 
   // Radioterapia del lecho del primario
@@ -890,24 +890,24 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     return { v: 'Indicada', d: dose + ' en el lecho en las 8 semanas siguientes' + (d !== null && d > 20 ? ' (tumor > 2 cm: AEDV la considera siempre).' : '.'), c: 'ok' };
   }
 
-  // Manejo de la cuenca ganglionar
+  // Manejo del territorio ganglionar
   function vNodal(c) {
-    if (isM1()) return { v: 'Paliativo', d: 'Radioterapia de la cuenca si es sintomática.', c: 'na' };
+    if (isM1()) return { v: 'Paliativo', d: 'Radioterapia del territorio ganglionar si es sintomática.', c: 'na' };
     if (S.nst === 'sosp') return { v: 'Pendiente', d: 'Confirmar la adenopatía sospechosa con citología o biopsia.', c: 'na' };
     if (macroN() || isT0()) {
-      if (S.cur === 'no') return { v: 'RT definitiva', d: 'Enfermedad ganglionar inoperable: radioterapia definitiva de la cuenca.', c: 'ok' };
+      if (S.cur === 'no') return { v: 'RT definitiva', d: 'Enfermedad ganglionar inoperable: radioterapia definitiva del territorio ganglionar.', c: 'ok' };
       return { v: 'Linfadenectomía + RT', d: 'Linfadenectomía terapéutica y radioterapia postoperatoria' + (S.nmul || S.ene ? ' (varios ganglios o extensión extraganglionar).' : ', sobre todo si hay varios ganglios o extensión extraganglionar.'), c: 'ok' };
     }
-    if (S.cur === 'no') return { v: 'RT definitiva', d: 'Si hay riesgo de enfermedad subclínica, radioterapia de la cuenca junto al primario.', c: 'maybe' };
+    if (S.cur === 'no') return { v: 'RT definitiva', d: 'Si hay riesgo de enfermedad subclínica, radioterapia del territorio ganglionar junto al primario.', c: 'maybe' };
     if (S.sln === 'pos') {
-      if (S.lnd) return S.nmul || S.ene ? { v: 'RT postoperatoria', d: 'Varios ganglios o extensión extraganglionar tras la linfadenectomía.', c: 'ok' } : { v: 'RT a considerar', d: 'Tras linfadenectomía, radioterapia de la cuenca recomendada en combinación (EADO); decidir en comité.', c: 'maybe' };
-      return { v: 'RT ± linfadenectomía', d: 'Radioterapia adyuvante de la cuenca (50–55 Gy) sola o con linfadenectomía; mejor que la linfadenectomía sola.', c: 'ok' };
+      if (S.lnd) return S.nmul || S.ene ? { v: 'RT postoperatoria', d: 'Varios ganglios o extensión extraganglionar tras la linfadenectomía.', c: 'ok' } : { v: 'RT a considerar', d: 'Tras linfadenectomía, radioterapia del territorio ganglionar, recomendada en combinación (EADO); decidir en comité.', c: 'maybe' };
+      return { v: 'RT ± linfadenectomía', d: 'Radioterapia adyuvante del territorio ganglionar (50–55 Gy) sola o con linfadenectomía; mejor que la linfadenectomía sola.', c: 'ok' };
     }
     if (S.sln === 'neg') {
-      if (S.loc === 'hn' || S.inm !== 'no') return { v: 'Observación o RT', d: 'Riesgo de falso negativo (' + (S.loc === 'hn' ? 'cabeza y cuello' : 'inmunodepresión') + '): valorar radioterapia de la cuenca en comité.', c: 'maybe' };
+      if (S.loc === 'hn' || S.inm !== 'no') return { v: 'Observación o RT', d: 'Riesgo de falso negativo (' + (S.loc === 'hn' ? 'cabeza y cuello' : 'inmunodepresión') + '): valorar radioterapia del territorio ganglionar en comité.', c: 'maybe' };
       return { v: 'Observación', d: 'Ganglio centinela negativo sin riesgo de falso negativo.', c: 'no' };
     }
-    if (S.sln === 'no') return { v: 'RT de la cuenca', d: 'Sin ganglio centinela y con riesgo de enfermedad subclínica (AEDV B; ESMO IV, B).', c: 'ok' };
+    if (S.sln === 'no') return { v: 'RT ganglionar', d: 'Sin ganglio centinela y con riesgo de enfermedad subclínica (AEDV B; ESMO IV, B).', c: 'ok' };
     return { v: '—', d: 'Según el resultado del ganglio centinela.', c: 'na' };
   }
 
@@ -973,7 +973,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     if (d !== null && (d === 20 || d === 50)) notes.push('En el punto de corte exacto: T1 ≤ 2 cm, T2 > 2 y ≤ 5 cm, T3 > 5 cm.');
     if (S.nst === 'sosp') notes.push('N pendiente de confirmación citológica o histológica.');
     if (S.nst === 'neg' && S.sln === 'pend' && !isM1()) notes.push('Estadio clínico: el estadio patológico requiere la biopsia del ganglio centinela.');
-    if (S.nst === 'neg' && S.sln === 'no') notes.push('Sin estudio histológico de la cuenca: estadio clínico.');
+    if (S.nst === 'neg' && S.sln === 'no') notes.push('Sin estudio histológico del territorio ganglionar: estadio clínico.');
     if (S.itm) notes.push('Las metástasis en tránsito o satélites se clasifican como N2 (sin ganglios) o N3 (con ganglios).');
     if (isT0()) notes.push('Primario desconocido: T0. Con macrometástasis ganglionar confirmada corresponde a estadio IIIA patológico.');
     if (c.st && !notes.length) notes.push('Clasificación completa (' + (c.path ? 'estadificación patológica' : 'estadificación clínica') + ').');
@@ -1005,7 +1005,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     html += verdictHTML('Ganglio centinela', vSLNB(c));
     html += verdictHTML('Pruebas de imagen', vImaging(c));
     html += verdictHTML('Radioterapia del lecho', vRTbed(c));
-    html += verdictHTML('Cuenca ganglionar', vNodal(c));
+    html += verdictHTML('Territorio ganglionar', vNodal(c));
     html += verdictHTML('Tratamiento sistémico', vSys(c));
 
     var secs = build(c);

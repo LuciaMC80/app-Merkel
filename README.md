@@ -20,7 +20,7 @@ centinela, estado ganglionar, metástasis en tránsito y a distancia) la aplicac
 - **Factores de alto riesgo de recidiva** de EADO 2022 (adaptados de NCCN).
 - **Actitud tras la exéresis** según el margen clínico y la distancia histológica al margen.
 - **Veredictos** de margen quirúrgico, ganglio centinela, pruebas de imagen,
-  radioterapia del lecho, manejo de la cuenca ganglionar y tratamiento sistémico.
+  radioterapia del lecho, manejo del territorio ganglionar y tratamiento sistémico.
 - Recomendaciones de **clasificación y pronóstico, diagnóstico y anatomía patológica,
   cirugía, radioterapia, manejo ganglionar, estudio de extensión, tratamiento sistémico,
   paciente inmunodeprimido, paciente mayor o frágil y seguimiento**.
