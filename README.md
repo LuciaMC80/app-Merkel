@@ -8,6 +8,8 @@ células de Merkel (CCM) y obtener las recomendaciones de manejo de las guías
 **CAP 2026** (College of American Pathologists) y de la evidencia posterior más
 relevante. Cada recomendación indica la guía de la que procede.
 
+**Abrir la aplicación:** https://luciamc80.github.io/app-Merkel/
+
 ## Qué hace
 
 A partir de los datos del caso (edad, inmunodepresión, fragilidad, localización,
@@ -32,7 +34,7 @@ centinela, estado ganglionar, metástasis en tránsito y a distancia) la aplicac
 
 ## Uso en el móvil
 
-Se abre desde el navegador. Para dejarla como una app:
+Se abre desde el navegador con el enlace de arriba. Para dejarla como una app:
 
 - **Android (Chrome):** menú ⋮ → *Añadir a pantalla de inicio*.
 - **iPhone (Safari):** botón de compartir → *Añadir a pantalla de inicio*.
