@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#4A2A3A">
-<meta name="description" content="Estadificación y manejo del carcinoma de células de Merkel según AJCC/UICC 8.ª edición, con recomendaciones de las guías ESMO‑EURACAN 2024, EADO 2022 y AEDV 2019 y el protocolo CAP 2026.">
+<meta name="description" content="Estadificación y manejo del carcinoma de células de Merkel según AJCC/UICC 8.ª edición, con recomendaciones de las guías NCCN 1.2027, ESMO‑EURACAN 2024, EADO 2022 y AEDV 2019 y el protocolo CAP 2026.">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -179,7 +179,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     <div>
       <div class="eyebrow">Herramienta de apoyo a la decisión clínica</div>
       <h1>Manejo del carcinoma de células de Merkel</h1>
-      <p class="lede">Estadificación AJCC‑8 / UICC‑8 (American Joint Committee on Cancer / Union for International Cancer Control; sin cambios en la UICC‑9). Recomendaciones de ESMO‑EURACAN 2024 (European Society for Medical Oncology), EADO 2022 (European Association of Dermato‑Oncology, con EDF y EORTC), AEDV 2019 (Academia Española de Dermatología y Venereología) y el protocolo anatomopatológico CAP 2026 (College of American Pathologists), con la evidencia posterior más relevante. Cada recomendación indica la guía de la que procede.</p>
+      <p class="lede">Estadificación AJCC‑8 / UICC‑8 (American Joint Committee on Cancer / Union for International Cancer Control; sin cambios en la UICC‑9). Recomendaciones de NCCN 1.2027 (National Comprehensive Cancer Network, octubre de 2026), ESMO‑EURACAN 2024 (European Society for Medical Oncology), EADO 2022 (European Association of Dermato‑Oncology, con EDF y EORTC), AEDV 2019 (Academia Española de Dermatología y Venereología) y el protocolo anatomopatológico CAP 2026 (College of American Pathologists), con la evidencia posterior más relevante. Cada recomendación indica la guía de la que procede.</p>
     </div>
     <div class="hbtns" data-noprint>
       <button class="btn primary" id="b-share">Compartir caso</button>
@@ -247,7 +247,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
             <button class="opt" data-k="loc" data-v="ex">Extremidades</button>
             <button class="opt" data-k="loc" data-v="t0">Primario desconocido (sólo enfermedad ganglionar)</button>
           </div>
-          <div class="hint">Cabeza y cuello es factor de alto riesgo (EADO, NCCN) y aumenta los falsos negativos del ganglio centinela.</div>
+          <div class="hint">Cabeza y cuello es factor de alto riesgo (EADO) y factor adverso de recidiva (NCCN), y aumenta los falsos negativos del ganglio centinela.</div>
         </div>
 
         <div class="field" data-dis-k="prim">
@@ -565,7 +565,26 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     return f;
   }
 
-  // Muy bajo riesgo: < 1 cm, R0, sin factores (ESMO «estadio IA»; AEDV; NCCN citada por AEDV)
+  // Factores adversos de recidiva local o regional de NCCN 1.2027 (MCC‑2): con uno, considerar RT adyuvante
+  function nccnRF() {
+    var f = [], d = num('diam');
+    if (isT0()) return f;
+    if (S.mar === 'r1' || S.mar === 'r2') f.push('Márgenes afectos');
+    else if (narrow()) f.push('Márgenes cercanos');
+    if (S.lvi) f.push('Invasión linfovascular');
+    if (S.inm !== 'no') f.push('Inmunodepresión');
+    if (d !== null && d > 10) f.push('Primario > 1 cm');
+    if (S.nst === 'neg' && S.sln === 'pos') f.push('Ganglio centinela positivo');
+    if (S.loc === 'hn') f.push('Cabeza y cuello');
+    return f;
+  }
+
+  function nccnSys() {
+    if (isM1() || nodePos() || S.itm || isT0()) return 'NCCN 1.2027 (enfermedad regional sin cirugía ni radioterapia curativas, en tránsito o diseminada): preferentes ensayo clínico, avelumab, nivolumab, pembrolizumab y retifanlimab.';
+    return 'NCCN 1.2027 (localmente avanzado sin ganglios, si cirugía y radioterapia curativas no son factibles): en el primario, preferentes avelumab y pembrolizumab, retifanlimab como otra opción y nivolumab neoadyuvante útil en determinadas circunstancias; en el recidivado, preferentes pembrolizumab y retifanlimab, y avelumab como otra opción.';
+  }
+
+  // Muy bajo riesgo: < 1 cm, R0, sin factores (ESMO «estadio IA»; AEDV)
   function veryLow(c) {
     var d = num('diam');
     return !isT0() && d !== null && d < 10 && S.mar === 'r0' && !S.lvi && S.inm === 'no' &&
@@ -600,8 +619,10 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     cl.push(it('Estadios clínicos: 0 TisN0 · I T1N0 · IIA T2–3N0 · IIB T4N0 · III cualquier T N1–3 · IV M1. Estadios patológicos: igual hasta IIB; IIIA T1–4 N1a(sn) o N1a, o T0 N1b (primario desconocido); IIIB T1–4 N1b, N2 o N3; IV M1. El estadio patológico exige estudio histológico del territorio ganglionar (centinela o linfadenectomía).' + este(c.st ? (c.path ? 'estadio patológico ' : 'estadio clínico ') + c.st : ''), ['AJCC‑8', 'UICC‑9']));
     cl.push(it('La UICC 9.ª edición (2025) mantiene las mismas categorías T, N y M y los mismos estadios. ESMO recomienda la UICC 8.ª edición; EADO, la AJCC/UICC 8.ª edición.', ['UICC‑9', 'ESMO', 'EADO'], 'info'));
     cl.push(it('Supervivencia global a 5 años en la serie de la AJCC‑8 (9387 pacientes): estadio patológico I 62,8 %, IIA 54,6 %, IIB 34,8 %, IIIA 40,3 %, IIIB 26,8 %; clínico I 45 %, IIA 30,9 %, IIB 27,3 %, III 26,8 %; IV 13,5 %. Primario desconocido con afectación ganglionar: 42,2 %. Series recientes muestran cifras más altas (72,6 % en enfermedad local y 62,7 % en ganglionar).', ['EADO']));
-    cl.push(it('Factores de alto riesgo de recidiva (basta uno): tamaño ≥ 2 cm, inmunodepresión crónica, cabeza y cuello, ganglios patológicamente positivos o estado ganglionar no evaluado correctamente, e invasión linfovascular.' + este(c.rf.length ? c.rf.join(', ').toLowerCase() : (c.pending ? '' : 'ninguno')), ['EADO', 'NCCN 2021 · cit. EADO']));
+    cl.push(it('Factores de alto riesgo de recidiva (basta uno): tamaño ≥ 2 cm, inmunodepresión crónica, cabeza y cuello, ganglios patológicamente positivos o estado ganglionar no evaluado correctamente, e invasión linfovascular.' + este(c.rf.length ? c.rf.join(', ').toLowerCase() : (c.pending ? '' : 'ninguno')), ['EADO']));
     cl.push(it('Otros factores desfavorables: edad > 75 años, sexo masculino, comorbilidad, márgenes positivos, índice mitótico alto, patrón infiltrativo, invasión linfovascular y expresión de p63; son favorables la expresión de antígeno T grande y RB1 y el infiltrado de linfocitos CD8+. El tumor negativo para MCPyV tiene peor pronóstico.' + (S.vir === 'neg' ? ' En este caso el tumor es MCPyV negativo.' : ''), ['ESMO', 'EADO', 'CAP 2026']));
+    if (!isT0()) cl.push(it('Factores adversos de recidiva local o regional (NCCN 1.2027; con uno o más, considerar radioterapia adyuvante del lecho): márgenes cercanos o afectos, invasión linfovascular, inmunodepresión, primario > 1 cm, ganglio centinela positivo y localización en cabeza y cuello.' + este(c.nf.length ? c.nf.join(', ').toLowerCase() : (num('diam') === null ? '' : 'ninguno')), ['NCCN 2A']));
+    cl.push(it('Factores de riesgo de recidiva que justifican vigilancia con imagen (NCCN): márgenes cercanos o afectos, inmunodepresión, edad avanzada, estadio II–IV, metástasis en ganglios no centinela, MCPyV negativo y otros a juicio del equipo.', ['NCCN']));
     if (nodePos()) cl.push(it('El número de ganglios afectos predice la supervivencia relativa a 5 años: 1 ganglio, 50 %; 2, 47 %; 3–5, 42 %; 6 o más, 24 % (sin afectación, 76 %). Cada ganglio positivo añade un 17 % de riesgo de muerte hasta el tercero.', ['EADO', 'AEDV']));
     secs.push({ t: 'Clasificación y pronóstico', items: cl });
 
@@ -614,6 +635,8 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     dx.push(it('Informe tras la exéresis: tamaño, afectación de fascia, músculo, cartílago o hueso, márgenes, espesor, invasión linfovascular, linfocitos infiltrantes, perfil inmunohistoquímico, estado del MCPyV e índice mitótico.', ['ESMO III, A']));
     dx.push(it('Datos obligatorios del informe CAP: localización, tamaño máximo, extensión, invasión linfática o vascular, metástasis cutáneas locorregionales, márgenes (con la distancia si es ≤ 1 mm), ganglios (número de afectos y de centinelas, tamaño del mayor depósito y extensión extraganglionar) y pTNM. Opcionales: subtipo puro o combinado, mitosis por mm², espesor, linfocitos infiltrantes, patrón de crecimiento y MCPyV.', ['CAP 2026']));
     dx.push(it('Los afeitados, sacabocados o incisionales que no incluyen toda la lesión son subóptimos para la evaluación anatomopatológica. Los cortes en congelación de los márgenes requieren mucha cautela: las células tumorales pueden simular linfocitos.', ['CAP 2026'], 'info'));
+    dx.push(it('Informe mínimo (NCCN, preferible sinóptico): diámetro máximo, márgenes periférico y profundo, invasión linfovascular y extensión extracutánea (hueso, músculo, fascia, cartílago). Muy recomendable: espesor (Breslow), linfocitos infiltrantes (ausentes, no densos, densos), patrón de crecimiento (nodular o infiltrativo) y segunda neoplasia en la pieza (p. ej., carcinoma epidermoide).', ['NCCN']));
+    dx.push(it('Inmunohistoquímica en todo diagnóstico nuevo (NCCN): CK20 (membranosa o en punto paranuclear) y TTF‑1 negativo suelen bastar. Si el patrón es atípico: AE1/AE3 en punto, al menos un marcador neuroendocrino (sinaptofisina, neurofilamento, INSM1 —el más sensible—, cromogranina A, CD56, enolasa) y/o antígeno T del MCPyV (CM2B4).', ['NCCN']));
     dx.push(it('El valor pronóstico de p63, PD‑L1, enolasa neuronal específica o CD200 no está establecido.', ['ESMO IV, B'], 'info'));
     secs.push({ t: 'Diagnóstico y anatomía patológica', items: dx });
 
@@ -633,10 +656,12 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
       cir.push(it('Márgenes de 1 cm suelen bastar en lesiones pequeñas; en tumores > 2 cm, 2 cm si es posible. La exéresis completa tiene prioridad sobre la estética.' + (d !== null && d > 20 ? ' En este caso el tumor mide más de 2 cm.' : ''), ['AEDV'], d !== null && d > 20 ? 'warn' : 'std'));
       cir.push(it('Márgenes > 1 cm se asocian a mejor supervivencia global que ≤ 1 cm (HR 0,88), sin diferencias entre 1,1–2 cm y > 2 cm. Los márgenes amplios no mejoran la supervivencia en mayores de 75 años ni en el estadio III.', ['EADO']));
       cir.push(it('La cirugía de Mohs es una alternativa segura en casos seleccionados, sobre todo en zonas estética o funcionalmente sensibles de cabeza y cuello (recidiva local 8,5 % frente a 6,8 % con exéresis amplia).', ['ESMO', 'EADO'], S.loc === 'hn' ? 'warn' : 'std'));
+      cir.push(it('Principios quirúrgicos (NCCN): obtener márgenes histológicos negativos cuando sea factible, equilibrándolos con la morbilidad y buscando un cierre primario que no retrase la radioterapia. Si está prevista la radioterapia adyuvante, márgenes estrechos probablemente bastan (objetivo: márgenes libres o microscópicamente afectos, no macroscópicos); si puede no estar indicada, exéresis amplia con 1–2 cm hasta la fascia muscular o el pericráneo. Mohs u otras técnicas PDEMA en determinadas circunstancias, siempre que no interfieran con el ganglio centinela.', ['NCCN 2A']));
+      cir.push(it('Diferir cualquier reconstrucción con despegamiento extenso o movilización de tejido hasta confirmar márgenes negativos y hacer el ganglio centinela (NCCN). En Mohs, si la biopsia previa no aporta todos los datos de estadificación, estudiar la pieza central en cortes verticales en parafina.', ['NCCN']));
       cir.push(it('Hacer la biopsia del ganglio centinela en el mismo acto que la cirugía del primario (o antes de la ampliación), porque la exéresis amplia puede alterar el drenaje linfático.', ['ESMO III, A', 'AEDV']));
       cir.push(it('Evitar grandes movilizaciones de tejido e injertos si está prevista la radioterapia adyuvante: retrasan su inicio.', ['ESMO', 'EADO']));
       if (S.mar === 'r1' || S.mar === 'r2') {
-        cir.push(it('Margen afecto: ampliar hasta obtener un margen histológico libre si es factible sin retrasar la radioterapia; si no, radioterapia del lecho a 60 Gy (afectación microscópica) o 66 Gy (macroscópica).', ['EADO', 'NCCN 2021 · cit. EADO'], 'warn'));
+        cir.push(it('Margen afecto: ampliar hasta obtener un margen histológico libre si es factible sin retrasar la radioterapia; si no, radioterapia del lecho a 60 Gy (afectación microscópica) o 66 Gy (macroscópica).', ['EADO'], 'warn'));
       } else if (S.mar === 'r0') {
         var mi = c.marg, mc = num('mcli');
         if (mi.close) cir.push(it('Tumor a ≤ 1 mm del margen ' + mi.sides.join(' y ') + ': margen estrecho. La radioterapia postoperatoria del lecho es obligada; valorar ampliar si no retrasa la radioterapia.', ['ESMO', 'CAP 2026'], 'warn'));
@@ -653,21 +678,27 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     var rt = [];
     if (isM1()) {
       rt.push(it('Radioterapia paliativa de lesiones sintomáticas: 8 Gy en dosis única puede dar una paliación duradera; 3 × 8 Gy consigue más respuestas completas (48 % frente a 10 %) y menos recidivas (5 % frente a 41 %). Con mal estado general, 20 Gy en 5 fracciones o 30 Gy en 10.', ['ESMO', 'EADO C, 3–4']));
+      rt.push(it('Esquemas paliativos (NCCN): 3 Gy × 10, 4 Gy × 5 u 8 Gy × 1–3 (la paliación duradera es más probable con 8 Gy × 3).', ['NCCN 2A']));
       rt.push(it('Radioterapia estereotáctica para la enfermedad oligometastásica (hasta 5 lesiones pequeñas, cerebrales o extracraneales).', ['EADO']));
     } else if (S.cur === 'no') {
-      rt.push(it('Radioterapia definitiva del primario ± ganglios: con buen estado general, 60–66 Gy en fracciones de 2 Gy; en ancianos pueden usarse esquemas moderadamente hipofraccionados. El carcinoma de Merkel es muy radiosensible: control en el campo de casi el 90 %, con recidivas fuera del campo.', ['EADO', 'ESMO', 'NCCN 2021 · cit. ESMO']));
+      rt.push(it('Radioterapia definitiva del tumor visible (NCCN): convencional 56–60 Gy; hipofraccionada 2,5 Gy × 20, 3 Gy × 15–17, 4 Gy × 10, 6–7 Gy × 5 o 8 Gy × 3 en días no consecutivos (precaución con fracciones de más de 5 Gy sobre cartílago o hueso). Indicada si es irresecable, el paciente rechaza la cirugía o ésta causaría una morbilidad importante. Si cirugía y radioterapia curativas no son factibles, considerar nivolumab neoadyuvante cuando el tumor pueda llegar a ser operable, o valorar radioterapia para el control local frente a tratamiento sistémico.', ['NCCN 2A']));
+      rt.push(it('Radioterapia definitiva del primario ± ganglios: con buen estado general, 60–66 Gy en fracciones de 2 Gy; en ancianos pueden usarse esquemas moderadamente hipofraccionados. El carcinoma de Merkel es muy radiosensible: control en el campo de casi el 90 %, con recidivas fuera del campo.', ['EADO', 'ESMO']));
     } else if (!isT0()) {
       rt.push(it('Radioterapia adyuvante del lecho con 50–60 Gy en tumores ≥ 1 cm o con factores pronósticos desfavorables (estadio ≥ IB).', ['ESMO IV, A']));
       rt.push(it('Iniciarla en las 8 semanas siguientes a la cirugía.', ['EADO B, 3']));
-      rt.push(it('Se debe considerar siempre si el tumor mide más de 2 cm o los márgenes no están libres; administrarla lo antes posible, porque el retraso empeora el pronóstico. Puede omitirse en tumores < 1 cm extirpados con márgenes amplios y libres, sin invasión linfovascular ni inmunosupresión.', ['AEDV B', 'NCCN · cit. AEDV']));
+      rt.push(it('Se debe considerar siempre si el tumor mide más de 2 cm o los márgenes no están libres; administrarla lo antes posible, porque el retraso empeora el pronóstico. Puede omitirse en tumores < 1 cm extirpados con márgenes amplios y libres, sin invasión linfovascular ni inmunosupresión.', ['AEDV B']));
       if (veryLow(c)) rt.push(it('Muy bajo riesgo (< 1 cm, R0, centinela negativo y sin factores desfavorables): la observación clínica sin radioterapia es una alternativa, decidida sólo en un centro de referencia.', ['ESMO V, A', 'AEDV B'], 'warn'));
       else if (eadoOmit(c)) rt.push(it('Estadio I (< 2 cm) con márgenes libres, ganglio centinela negativo y sin factores de riesgo (invasión linfovascular, cabeza y cuello, inmunodepresión): se ha propuesto omitir la radioterapia; la decisión debe tomarla el comité multidisciplinar.', ['EADO'], 'warn'));
-      rt.push(it('Dosis: 50–55 Gy en cabeza y cuello; en tronco y extremidades, 40 a < 50 Gy son suficientes. Con márgenes positivos, 60 Gy (microscópicos) o 66 Gy (macroscópicos). Fraccionamiento convencional de 2 Gy, con bolus para asegurar la dosis en la piel.' + (S.loc === 'hn' ? ' En este caso: 50–55 Gy (cabeza y cuello).' : ' En este caso: 40–50 Gy (tronco o extremidades).'), ['EADO', 'NCCN 2021 · cit. EADO']));
+      rt.push(it('Dosis: 50–55 Gy en cabeza y cuello; en tronco y extremidades, 40 a < 50 Gy son suficientes. Con márgenes positivos, 60 Gy (microscópicos) o 66 Gy (macroscópicos). Fraccionamiento convencional de 2 Gy, con bolus para asegurar la dosis en la piel.' + (S.loc === 'hn' ? ' En este caso: 50–55 Gy (cabeza y cuello).' : ' En este caso: 40–50 Gy (tronco o extremidades).'), ['EADO']));
       rt.push(it('Evidencia: en un metaanálisis de más de 17 000 pacientes (estadios I–III) la radioterapia adyuvante se asoció a mejor supervivencia global (HR 0,81) y control locorregional; en la National Cancer Database, a mejor supervivencia en los estadios I (HR 0,71) y II (HR 0,77), pero no en el III.', ['ESMO', 'AEDV']));
+      rt.push(it('NCCN 1.2027: tras la exéresis con márgenes libres y sin factores adversos, observación; con uno o más factores adversos (márgenes cercanos o afectos, invasión linfovascular, inmunodepresión, primario > 1 cm, ganglio centinela positivo, cabeza y cuello), considerar radioterapia adyuvante; con márgenes microscópicamente afectos, radioterapia adyuvante (preferente) y/o ampliación.' + este(c.nf.length ? 'factores adversos: ' + c.nf.join(', ').toLowerCase() : (num('diam') === null ? '' : 'sin factores adversos NCCN')), ['NCCN 2A'], c.nf.length ? 'warn' : 'std'));
+      rt.push(it('Dosis adyuvantes del lecho (NCCN, 1,8–2 Gy por fracción): 50–56 Gy con márgenes negativos, 56–60 Gy con márgenes microscópicamente afectos y 60 Gy con márgenes macroscópicamente afectos sin posibilidad de ampliar; hipofraccionadas 2,2–2,5 Gy × 20, 3–3,5 Gy × 10, o una fracción única de 8 Gy si no es candidato a un ciclo convencional por comorbilidad o con márgenes negativos y factores de riesgo mínimos. Campo con 5 cm de margen alrededor del lecho (2–3 cm en cabeza y cuello). Empezar en cuanto cicatrice la herida: un retraso de más de 7–8 semanas empeora el pronóstico.', ['NCCN 2A']));
       if (inm) rt.push(it('En el inmunodeprimido la radioterapia adyuvante se da a dosis estándar: no hay diferencias de supervivencia según el estado inmunitario.', ['EADO']));
     } else {
       rt.push(it('Primario desconocido: radioterapia del territorio ganglionar tras la linfadenectomía, o definitiva si no es operable (véase el manejo ganglionar).', ['ESMO III, B']));
     }
+    if (inm) rt.push(it('Inmunodepresión crónica o profunda (NCCN): puede considerarse hasta 66 Gy y deben evitarse los esquemas hipofraccionados de baja dosis biológica eficaz, con pocos datos.', ['NCCN'], 'warn'));
+    rt.push(it('Principios (NCCN): la indicación se decide con oncología radioterápica; bolus sobre el tumor y dosimetría de superficie; IGRT si se usa IMRT, protones o 3D conformada. Las dosis se basan en la práctica de los centros de la NCCN y en datos de otros cánceres cutáneos.', ['NCCN'], 'info'));
     secs.push({ t: 'Radioterapia', items: rt });
 
     // --- Ganglio centinela y manejo ganglionar ---
@@ -680,21 +711,25 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
       gg.push(it('No se ha demostrado que mejore la supervivencia, pero un estado ganglionar patológico negativo tiene mejor pronóstico que el clínico y evita tratamientos adyuvantes innecesarios.', ['AEDV D', 'ESMO']));
       gg.push(it('Falsos negativos en torno al 17 %, sobre todo en inmunodeprimidos y en tumores de cabeza y cuello o de la línea media del tronco (drenaje aberrante o varios territorios ganglionares). En localizaciones difíciles, usar SPECT‑TC.', ['ESMO III, A'], S.loc === 'hn' || inm ? 'warn' : 'std'));
       gg.push(it('Estudio del ganglio centinela: al menos dos niveles de hematoxilina‑eosina y una tinción inmunohistoquímica antes de considerarlo negativo. Cualquier depósito, incluidas las células tumorales aisladas, se considera positivo.', ['CAP 2026']));
+      gg.push(it('Centinela (NCCN): coordinar la cirugía para hacerlo antes o en el mismo acto que la exéresis definitiva. Estudio del ganglio entero con al menos dos niveles de hematoxilina‑eosina y una inmunohistoquímica; informar el número de ganglios afectos, el tamaño del mayor depósito (mm) y la extensión extraganglionar.', ['NCCN 2A']));
       if (S.sln === 'neg') {
+        gg.push(it('Centinela negativo (NCCN): observación del territorio ganglionar (preferente). Puede considerarse radioterapia empírica del territorio si la fiabilidad del centinela está comprometida (cirugía previa, LLC extensa en los ganglios, exéresis ganglionar previa), si el riesgo de falso negativo es alto por drenaje aberrante o varios territorios (cabeza y cuello, línea media del tronco) o si hay inmunodepresión profunda: 46–50 Gy, o hipofraccionada 2,5 Gy × 20, 3 Gy × 15–17 o 6–7 Gy × 5 dos veces por semana en mayores.' + (S.loc === 'hn' || S.inm !== 'no' ? ' En este caso: ' + (S.loc === 'hn' ? 'cabeza y cuello' : 'inmunodepresión') + '.' : ''), ['NCCN 2A'], S.loc === 'hn' || S.inm !== 'no' ? 'warn' : 'std'));
         gg.push(it('Ganglio centinela negativo: la observación es una opción. Si hay riesgo de falso negativo (cabeza y cuello, exéresis amplia previa, problemas técnicos, inmunosupresión profunda), puede considerarse la radioterapia del territorio ganglionar; decisión del comité de un centro de referencia.', ['ESMO IV, B', 'AEDV B'], S.loc === 'hn' || inm ? 'warn' : 'std'));
       } else if (S.sln === 'pos') {
+        gg.push(it('Centinela positivo (NCCN): radioterapia del territorio ganglionar (preferente; 50–56 Gy, o 2,2–2,5 Gy × 20, 3–3,5 Gy × 10 u 8 Gy × 2), linfadenectomía sólo en circunstancias clínicas poco frecuentes, u observación. Tras la linfadenectomía, radioterapia adyuvante (50–60 Gy) si hay varios ganglios afectos, extensión extraganglionar o ganglios grandes (> 1 cm). Precaución con el linfedema (obesidad, ingle, tabaquismo activo).', ['NCCN 2A'], 'warn'));
         gg.push(it('Ganglio centinela positivo: radioterapia adyuvante del territorio ganglionar sola (50–55 Gy) o combinada con linfadenectomía, preferible a la linfadenectomía sola, que queda como opción si no puede darse radioterapia.', ['EADO GCP', 'ESMO IV, B'], 'warn'));
         gg.push(it('En un estudio prospectivo de 163 pacientes no hubo diferencias de supervivencia entre linfadenectomía y radioterapia. En pacientes más jóvenes (< 75 años) y con poca comorbilidad, la combinación de radioterapia y linfadenectomía puede ser beneficiosa.', ['ESMO', 'EADO']));
         if (S.lnd && (S.nmul || S.ene)) gg.push(it('Linfadenectomía con varios ganglios afectos o extensión extraganglionar: radioterapia postoperatoria del territorio ganglionar.', ['ESMO III, B', 'AEDV B'], 'warn'));
         else if (!S.lnd) gg.push(it('Si no se hace linfadenectomía, radioterapia del territorio ganglionar.', ['AEDV B']));
       } else if (S.sln === 'no') {
-        gg.push(it('Sin biopsia del ganglio centinela (contraindicación, rechazo o dificultad técnica, típica en cabeza y cuello): radioterapia del territorio ganglionar si existe riesgo de enfermedad subclínica.', ['AEDV B', 'ESMO IV, B', 'NCCN · cit. AEDV'], 'warn'));
+        gg.push(it('Sin biopsia del ganglio centinela (contraindicación, rechazo o dificultad técnica, típica en cabeza y cuello): radioterapia del territorio ganglionar si existe riesgo de enfermedad subclínica.', ['AEDV B', 'ESMO IV, B'], 'warn'));
         gg.push(it('Un ensayo aleatorizado, cerrado precozmente, mostró que la radioterapia profiláctica del territorio ganglionar reduce la recidiva regional (0 % frente a 16,7 %), sin mejorar la supervivencia global.', ['AEDV', 'EADO'], 'info'));
       }
     }
     if ((macroN() || isT0()) && !isM1()) {
       if (S.cur !== 'no') {
         gg.push(it('Metástasis ganglionar clínica o radiológica: linfadenectomía terapéutica del territorio ganglionar afectado, seguida de radioterapia postoperatoria, sobre todo si hay varios ganglios afectos o extensión extraganglionar. La radioterapia tras la linfadenectomía debe discutirse en comité.', ['EADO GCP', 'ESMO III, B', 'AEDV B'], S.nmul || S.ene ? 'warn' : 'std'));
+        gg.push(it('Enfermedad ganglionar clínica (NCCN): confirmar con PAAF o biopsia con aguja gruesa (biopsia escisional si es negativa y la sospecha persiste) e imagen de extensión. Tratamiento: linfadenectomía más radioterapia (preferente), o una de las dos; ensayo clínico preferente si está disponible; considerar nivolumab neoadyuvante o tratamiento sistémico. Dosis definitivas sin cirugía: 60 Gy a la adenopatía clínica.', ['NCCN 2A'], 'warn'));
         gg.push(it('Antes de la cirugía, estudio de imagen seccional. La extensión de la linfadenectomía sigue la guía ESMO de melanoma. Complicaciones (linfedema, infección, necrosis, dehiscencia): 26 % en la ingle frente a 9 % en la axila.', ['ESMO']));
       } else {
         gg.push(it('Enfermedad ganglionar inoperable o paciente no operable: radioterapia definitiva del territorio ganglionar.', ['ESMO III, B']));
@@ -704,6 +739,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     if (S.itm && !isM1()) {
       gg.push(it('Metástasis satélite o en tránsito: cirugía y/o radioterapia, o ensayo clínico; la quimioterapia adyuvante no está recomendada. En enfermedad voluminosa, múltiple o recidivante, la perfusión aislada de extremidad es una opción (respuestas del 80 %, completas del 50 %).', ['ESMO'], 'warn'));
       gg.push(it('La radioterapia está indicada en las metástasis en tránsito que no pueden extirparse.', ['EADO']));
+      gg.push(it('En tránsito (NCCN): confirmar con biopsia; ensayo clínico, cirugía o radioterapia, o tratamiento sistémico. Si la cirugía o la radioterapia curativas no son factibles: T‑VEC intralesional o infusión o perfusión aislada de extremidad con hipertermia (útiles en determinadas circunstancias). Irradiar los linfáticos en tránsito sólo si el primario está cerca del lecho ganglionar.', ['NCCN 2A']));
     }
     if (nodePos() && !isM1()) gg.push(it('Los pacientes con afectación ganglionar deben valorarse para ensayos clínicos de tratamiento sistémico neoadyuvante o adyuvante: ni la radioterapia adyuvante ni la quimioterapia han demostrado mejorar la supervivencia global.', ['ESMO III, A']));
     if (isM1()) gg.push(it('Enfermedad a distancia: el manejo ganglionar es paliativo y se decide en comité (radioterapia del territorio ganglionar sintomático).', ['EADO C, 3–4']));
@@ -717,6 +753,11 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     if (!nodePos() && !isM1() && !S.itm && !isT0()) ex.push(it('No se recomienda la imagen cerebral rutinaria en los estadios I–II asintomáticos (las metástasis cerebrales aparecen en el 5 %). RM sólo si hay síntomas.', ['EADO B, 3–4']));
     else ex.push(it('Estadio III o superior, o síntomas neurológicos: añadir RM cerebral.', ['EADO']));
     if (isT0()) ex.push(it('Primario desconocido: descartar un carcinoma neuroendocrino pulmonar (TC de tórax, TTF‑1).', ['AEDV', 'EADO']));
+    ex.push(it('Estudio inicial (NCCN): consulta multidisciplinar en un centro con experiencia. Imagen recomendada en la mayoría de los casos, porque detecta metástasis ocultas en el 12–20 % sin hallazgos clínicos: PET‑TC con FDG de cuerpo entero (preferente) o TC con contraste de tórax, abdomen y pelvis (y cuello si el primario es de cabeza y cuello), y RM cerebral con y sin contraste si se sospechan metástasis cerebrales o extensión directa. La imagen también ayuda a descartar una metástasis cutánea de un carcinoma neuroendocrino no cutáneo, sobre todo si CK20 es negativo o TTF‑1 positivo.', ['NCCN 2A']));
+    ex.push(it('Si el diagnóstico se hizo sólo con biopsia con aguja gruesa, considerar obtener más tejido tumoral antes de la inmunoterapia o la radioterapia: es necesario para el ADN tumoral circulante (ctDNA) informado por el tejido, que detecta la carga tumoral en tumores con y sin virus y suele positivizarse antes o en el momento de la recidiva.', ['NCCN']));
+    ex.push(it('Anticuerpos frente a la oncoproteína del MCPyV en el estudio inicial (NCCN): hacerlos en los 3 meses del tratamiento, porque el título cae al eliminar la enfermedad visible; los seronegativos tienen más riesgo de recidiva y en los seropositivos un título creciente puede anunciarla.', ['NCCN']));
+    if (edad !== null && edad < 50) ex.push(it('Menor de 50 años: considerar consejo genético para buscar variantes germinales patogénicas o probablemente patogénicas en genes de susceptibilidad al cáncer (presentes en alrededor del 20 % de los pacientes de esta edad).', ['NCCN'], 'warn'));
+    else ex.push(it('En menores de 50 años, considerar consejo genético: alrededor del 20 % tienen variantes germinales patogénicas en genes de susceptibilidad al cáncer.', ['NCCN'], 'info'));
     ex.push(it('La PET con análogos de somatostatina no ha demostrado ventaja sobre la PET‑TC con FDG; puede detectar mejor las metástasis cerebrales y seleccionar candidatos a radionúclidos.', ['EADO'], 'info'));
     ex.push(it('Anticuerpos frente a la oncoproteína del MCPyV al diagnóstico: los seronegativos tienen más riesgo de recidiva y en los seropositivos el aumento del título acompaña a la recidiva. Útil sobre todo para el seguimiento; no es un estándar.', ['EADO', 'ESMO V, A'], 'info'));
     secs.push({ t: 'Estudio de extensión', items: ex });
@@ -734,6 +775,8 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
         tx.push(it('Nivolumab con ipilimumab: muchas respuestas completas, pero datos inmaduros y toxicidad relevante en ancianos.', ['ESMO'], 'info'));
       }
       tx.push(it('Contraindicación o fracaso de la inmunoterapia: quimioterapia (cisplatino 60–80 mg/m² día 1 o carboplatino AUC 5 día 1, con etopósido 80–120 mg/m² días 1–3, cada 21–28 días) o radioterapia paliativa. Respuestas del 53–61 % en primera línea y del 23–45 % en segunda, pero breves (2–9 meses), con muertes tóxicas del 3–10 % y efecto incierto sobre la supervivencia.', ['ESMO III, B', 'EADO C, 3–4'], S.ci ? 'warn' : 'std'));
+      tx.push(it(nccnSys() + ' Otra opción recomendada: ipilimumab con nivolumab (sobre todo si es refractario a anti‑PD‑1). Si los anti‑PD‑(L)1 están contraindicados: carboplatino o cisplatino ± etopósido' + (isM1() ? '' : ' (en la regional, sólo en la recidiva)') + ', CAV (ciclofosfamida, doxorrubicina o epirrubicina, vincristina) o topotecán. Tras progresión o refractariedad a anti‑PD‑(L)1 en monoterapia: ipilimumab, octreótido LAR si el estudio de receptores de somatostatina es positivo, pazopanib o T‑VEC paliativo en lesiones inyectables' + (isM1() ? ' (los tres últimos, categoría 2B).' : '.'), ['NCCN 2A'], 'warn'));
+      if (isM1()) tx.push(it('Estadio IV (NCCN): ensayo clínico preferente; tratamiento sistémico, radioterapia o cirugía (resección de metástasis limitadas en casos muy seleccionados), solos o combinados, o mejor tratamiento de soporte. El panel genómico tumoral (NGS) puede revelar dianas terapéuticas.', ['NCCN 2A']));
       if (isM1()) tx.push(it('Recidiva oligometastásica resecable: cirugía o radioterapia estereotáctica en pacientes en buen estado, aunque la inmunoterapia sistémica debe ser el primer paso.', ['ESMO V, B']));
       tx.push(it('No se recomiendan terapias dirigidas (pazopanib, cabozantinib); la terapia con radionúclidos (Lu‑177‑DOTATATE) no es un estándar.', ['ESMO'], 'info'));
       tx.push(it('Derivación precoz a cuidados paliativos y de soporte en la enfermedad sintomática localmente avanzada o metastásica. Dolor: escalera de la OMS, pautado. Mal olor de las úlceras: lavado diario y metronidazol tópico (0,75–0,8 % al menos 14 días) u oral (500 mg cada 8 horas, 10–14 días).', ['EADO GCP']));
@@ -742,6 +785,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
       tx.push(it('Ofrecer ensayos clínicos de inmunoterapia neoadyuvante o adyuvante.', ['ESMO III, A', 'EADO GCP']));
       tx.push(it('Neoadyuvancia con nivolumab (CheckMate 358, estadios IIA–IV resecables): respuesta patológica completa del 47,2 %, sin recidivas en quienes la alcanzaron. En investigación.', ['EADO', 'ESMO'], 'info'));
       tx.push(it('Ipilimumab adyuvante (ADMEC): cerrado por futilidad y con toxicidad importante.', ['EADO'], 'info'));
+      tx.push(it('NCCN: la quimioterapia adyuvante no se recomienda de rutina en la enfermedad regional (sin beneficio de supervivencia en series), aunque puede valorarse caso a caso; no hay datos que apoyen la inmunoterapia adyuvante fuera de un ensayo. En la enfermedad ganglionar resecable, nivolumab neoadyuvante es útil en determinadas circunstancias.', ['NCCN 2A']));
     } else {
       tx.push(it('Enfermedad localizada: no hay tratamiento sistémico estándar fuera de ensayo clínico. La quimioterapia adyuvante no está recomendada.', ['ESMO IV, D', 'EADO']));
     }
@@ -757,6 +801,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
       im.push(it('Curso más agresivo: menor supervivencia específica (40 % frente a 74 % a 3 años) y más recidivas (HR 3,67), con independencia de la comorbilidad. Abordaje siempre multidisciplinar.', ['EADO']));
       im.push(it('El ganglio centinela es menos fiable; si es negativo, valorar la radioterapia del territorio ganglionar.', ['ESMO III, A', 'ESMO IV, B']));
       im.push(it('Radioterapia adyuvante a dosis estándar. La radioterapia curativa o paliativa de la enfermedad macroscópica parece menos eficaz, y se ha propuesto intensificarla.', ['EADO']));
+      im.push(it('NCCN: la inmunodepresión empeora el pronóstico; reducir los tratamientos inmunosupresores en la medida clínicamente posible, de acuerdo con el médico responsable, y hacer un seguimiento más frecuente. Es factor adverso de recidiva y motivo para considerar radioterapia empírica del territorio ganglionar si es profunda.', ['NCCN 2A']));
       im.push(it('Valorar caso a caso reducir la inmunosupresión. El paso a inhibidores de mTOR no ha demostrado beneficio en el carcinoma de Merkel.', ['EADO', 'AEDV']));
       if (S.inm === 'tos' && adv) im.push(it('Inhibidores de PD‑(L)1 en trasplantados: datos escasos; mejores resultados en trasplante renal que hepático y función del injerto conservada en dos tercios. Decidir con el equipo de trasplante.', ['EADO'], 'warn'));
       if (S.inm === 'hem') im.push(it('LLC y linfoma: con inhibidores de PD‑(L)1, supervivencia global similar y libre de progresión menor. La LLC puede coexistir en la propia pieza del tumor.', ['EADO', 'CAP 2026']));
@@ -790,6 +835,8 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     fu.push(it('En cada visita: exploración de toda la piel, de la cicatriz, del trayecto en tránsito y de los ganglios. Educar en la autoexploración: el riesgo de un segundo cáncer cutáneo es mayor.', ['ESMO IV, A', 'AEDV C']));
     fu.push(it('El riesgo de recidiva es máximo los 2–3 primeros años (40–50 % ganglionar, 33 % a distancia). Una recidiva locorregional detectada pronto puede curarse con cirugía; la inoperable se trata como enfermedad metastásica.', ['ESMO', 'EADO']));
     fu.push(it('Anticuerpos frente a la oncoproteína del MCPyV: utilizables en el seguimiento de los pacientes seropositivos al diagnóstico.', ['ESMO V, A'], 'info'));
+    fu.push(it('NCCN: exploración física con piel y ganglios completos cada 3–6 meses durante 3 años y después cada 6–12 meses; imagen y otras pruebas según la clínica, con imagen de vigilancia rutinaria en los pacientes de alto riesgo (TC de tórax, abdomen y pelvis con contraste, y cuello si el primario era de cabeza y cuello; PET‑TC si el primario es de una extremidad, para las metástasis en tránsito). Anticuerpos frente al MCPyV o ctDNA, a menudo cada 3 meses.', ['NCCN 2A']));
+    fu.push(it('Recidiva (NCCN): ensayo clínico preferente; local, regional o en tránsito, por las vías de la enfermedad ganglionar; diseminada, como el estadio IV.', ['NCCN']));
     fu.push(it('Calculadora de riesgo de recidiva para ajustar la intensidad del seguimiento: merkelcell.org/prognosis/recur.', ['EADO'], 'info'));
     secs.push({ t: 'Seguimiento', items: fu });
 
@@ -807,12 +854,12 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
   // ---------------------------------------------------------------
   // [clave, sigla, nombre completo, prefijos de etiqueta]
   var GUIAS = [
+    ['nccn', 'NCCN 1.2027', 'National Comprehensive Cancer Network, versión 1.2027 (octubre 2026)', ['NCCN']],
     ['esmo', 'ESMO 2024', 'ESMO‑EURACAN Clinical Practice Guideline', ['ESMO']],
     ['eado', 'EADO 2022', 'European Association of Dermato‑Oncology, EDF y EORTC', ['EADO']],
     ['aedv', 'AEDV 2019', 'Academia Española de Dermatología y Venereología', ['AEDV']],
     ['tnm', 'AJCC‑8 / UICC', 'Estadificación TNM 8.ª ed. (UICC 9.ª sin cambios)', ['AJCC', 'UICC']],
     ['cap', 'CAP 2026', 'College of American Pathologists, protocolo 4.2', ['CAP']],
-    ['nccn', 'NCCN (citada)', 'Según la citan EADO, ESMO o AEDV', ['NCCN']],
     ['post', 'Evidencia posterior', 'Ensayos publicados tras EADO 2022 y AEDV 2019', ['Post']]
   ];
 
@@ -872,7 +919,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     if (S.nst === 'sosp') return { v: 'Ecografía + PAAF/BAG', d: 'Confirmar la adenopatía sospechosa; PET‑TC de cuerpo entero.', c: 'maybe' };
     var hi = nodePos() || isM1() || S.itm || isT0();
     if (hi) return { v: 'PET‑TC + RM cerebral', d: 'PET‑TC con FDG (o TC con contraste) de cuerpo entero y RM cerebral en el estadio III–IV' + (macroN() || isT0() ? '; imagen seccional antes de la linfadenectomía.' : '.'), c: 'ok' };
-    return { v: 'Ecografía + PET‑TC', d: 'Ecografía del territorio ganglionar regional y PET‑TC con FDG (o TC con contraste de tórax, abdomen y pelvis' + (S.loc === 'hn' ? ' y cuello' : '') + '). Sin imagen cerebral rutinaria si está asintomático.', c: 'ok' };
+    return { v: 'Ecografía + PET‑TC', d: 'Ecografía del territorio ganglionar regional y PET‑TC con FDG (preferente para la NCCN; o TC con contraste de tórax, abdomen y pelvis' + (S.loc === 'hn' ? ' y cuello' : '') + '). Sin imagen cerebral rutinaria si está asintomático.', c: 'ok' };
   }
 
   // Radioterapia del lecho del primario
@@ -885,6 +932,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     if (S.mar === 'r1' || S.mar === 'r2') return { v: 'Indicada', d: 'Márgenes afectos no ampliados: ' + (S.mar === 'r2' ? '66 Gy.' : '60 Gy.'), c: 'alert' };
     if (narrow()) return { v: 'Obligada', d: 'Margen estrecho: ' + dose + ' en el lecho en las 8 semanas siguientes.', c: 'ok' };
     if (veryLow(c)) return { v: 'Puede omitirse', d: 'Muy bajo riesgo: observación como alternativa, decidida en un centro de referencia (ESMO V, A; AEDV).', c: 'no' };
+    if (S.mar === 'r0' && !narrow() && !c.nf.length && num('diam') !== null && S.sln === 'neg') return { v: 'Puede omitirse (NCCN)', d: 'Márgenes libres sin factores adversos NCCN: la NCCN propone observación; ESMO y AEDV sólo la omiten por debajo de 1 cm y EADO lo discute en comité.', c: 'maybe' };
     if (eadoOmit(c)) return { v: 'Indicada · omisión en comité', d: 'Estadio I sin factores de riesgo y pN0: EADO admite discutir su omisión en comité. Si se da: ' + dose + '.', c: 'maybe' };
     var d = num('diam');
     return { v: 'Indicada', d: dose + ' en el lecho en las 8 semanas siguientes' + (d !== null && d > 20 ? ' (tumor > 2 cm: AEDV la considera siempre).' : '.'), c: 'ok' };
@@ -901,7 +949,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     if (S.cur === 'no') return { v: 'RT definitiva', d: 'Si hay riesgo de enfermedad subclínica, radioterapia del territorio ganglionar junto al primario.', c: 'maybe' };
     if (S.sln === 'pos') {
       if (S.lnd) return S.nmul || S.ene ? { v: 'RT postoperatoria', d: 'Varios ganglios o extensión extraganglionar tras la linfadenectomía.', c: 'ok' } : { v: 'RT a considerar', d: 'Tras linfadenectomía, radioterapia del territorio ganglionar, recomendada en combinación (EADO); decidir en comité.', c: 'maybe' };
-      return { v: 'RT ± linfadenectomía', d: 'Radioterapia adyuvante del territorio ganglionar (50–55 Gy) sola o con linfadenectomía; mejor que la linfadenectomía sola.', c: 'ok' };
+      return { v: 'RT ganglionar', d: 'Radioterapia del territorio ganglionar (NCCN preferente, 50–56 Gy; EADO 50–55 Gy), sola o con linfadenectomía; la linfadenectomía sola sólo en circunstancias poco frecuentes.', c: 'ok' };
     }
     if (S.sln === 'neg') {
       if (S.loc === 'hn' || S.inm !== 'no') return { v: 'Observación o RT', d: 'Riesgo de falso negativo (' + (S.loc === 'hn' ? 'cabeza y cuello' : 'inmunodepresión') + '): valorar radioterapia del territorio ganglionar en comité.', c: 'maybe' };
@@ -914,9 +962,9 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
   function vSys(c) {
     if (advanced()) {
       if (S.ci) return { v: 'QT o RT paliativa', d: 'Contraindicación o fracaso del anti‑PD‑(L)1: platino con etopósido o radioterapia paliativa; ensayo clínico.', c: 'maybe' };
-      return { v: 'Anti‑PD‑(L)1', d: 'Primera línea: avelumab o retifanlimab (aprobados por la EMA); ensayo clínico como opción preferente.', c: 'ok' };
+      return { v: 'Anti‑PD‑(L)1', d: 'Primera línea: avelumab o retifanlimab (aprobados por la EMA); ensayo clínico como opción preferente. NCCN: preferentes avelumab, nivolumab, pembrolizumab y retifanlimab' + (isM1() || nodePos() || S.itm ? '' : ' (localmente avanzado primario: avelumab y pembrolizumab; recidivado: pembrolizumab y retifanlimab)') + '.', c: 'ok' };
     }
-    if (nodePos() || S.itm || isT0()) return { v: 'Ensayo clínico', d: 'Sin adyuvancia estándar; quimioterapia adyuvante no recomendada. Nivolumab adyuvante (ADMEC‑O) no aprobado.', c: 'maybe' };
+    if (nodePos() || S.itm || isT0()) return { v: 'Ensayo clínico', d: 'Sin adyuvancia estándar; quimioterapia adyuvante no recomendada. Nivolumab adyuvante (ADMEC‑O) no aprobado.' + (macroN() ? ' NCCN: considerar nivolumab neoadyuvante en la enfermedad ganglionar clínica resecable.' : ''), c: 'maybe' };
     return { v: 'No indicado', d: 'Enfermedad localizada: manejo local y seguimiento; adyuvancia sólo en ensayo clínico.', c: 'no' };
   }
 
@@ -937,7 +985,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     var st = stage(T, N, path);
     var rf = riskFactors();
     var pending = !isT0() && num('diam') === null && S.ext === 'derm';
-    return { T: T, N: N, Nl: nLabel(N, path), path: path, st: st, os: os5(st, path), rf: rf, pending: pending, marg: margInfo() };
+    return { T: T, N: N, Nl: nLabel(N, path), path: path, st: st, os: os5(st, path), rf: rf, nf: nccnRF(), pending: pending, marg: margInfo() };
   }
 
   function render() {
@@ -990,7 +1038,7 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
       '<div class="stage-grid">' +
       '<div><div class="sg-lab">Estadio<div class="sg-full">' + (c.st ? (c.path ? 'Patológico' : 'Clínico') + ' · AJCC‑8' : 'AJCC‑8') + '</div></div><div class="sg-val">' + esc(c.st || '—') + '</div></div>' +
       '<div><div class="sg-lab">SG a 5 años<div class="sg-full">Serie AJCC‑8 (Harms 2016)</div></div><div class="sg-val">' + esc(c.os) + '</div></div>' +
-      '<div><div class="sg-lab">Riesgo de recidiva<div class="sg-full">EADO 2022 · NCCN 2021</div></div><div class="sg-val sm">' + esc(riskV) + '</div></div>' +
+      '<div><div class="sg-lab">Riesgo de recidiva<div class="sg-full">EADO 2022</div></div><div class="sg-val sm">' + esc(riskV) + '</div></div>' +
       '<div><div class="sg-lab">MCPyV<div class="sg-full">Poliomavirus de Merkel</div></div><div class="sg-val sm">' + esc({ pos: 'Positivo', neg: 'Negativo', nd: '—' }[S.vir]) + '</div></div>' +
       '</div><div class="stage-note">' + notes.map(function (n) { return '<p>' + esc(n) + '</p>'; }).join('') + '</div></div>';
 
@@ -998,7 +1046,8 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
     var fv = { v: nf + ' de 5', c: nf ? 'maybe' : (c.pending ? 'na' : 'no'),
       d: nf ? 'Factores de alto riesgo de recidiva presentes (basta uno para considerarlo de alto riesgo):' : (c.pending ? 'Introduzca el diámetro clínico para valorar el riesgo.' : 'Ninguno de los cinco factores de alto riesgo (tamaño ≥ 2 cm, inmunodepresión, cabeza y cuello, ganglios positivos o no evaluados, invasión linfovascular).') };
     var flist = nf ? '<div class="vlist">' + c.rf.map(function (f) { return '<span>' + esc(f) + '</span>'; }).join('') + '</div>' : '';
-    html += verdictHTML('Factores de alto riesgo (EADO / NCCN)', fv, flist);
+    if (c.nf.length) flist += '<div class="vdet" style="margin-top:8px">Factores adversos NCCN 1.2027 (considerar RT adyuvante):</div><div class="vlist">' + c.nf.map(function (f) { return '<span>' + esc(f) + '</span>'; }).join('') + '</div>';
+    html += verdictHTML('Factores de alto riesgo (EADO 2022 · NCCN 1.2027)', fv, flist);
     html += verdictHTML('Margen quirúrgico', vMargin(c));
     var act = vActitud(c);
     if (act) html += verdictHTML('Actitud tras la exéresis', act, '<ul class="steps">' + act.steps.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ul>');
@@ -1022,9 +1071,9 @@ input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-i
 
     html += '<div class="foot">' +
       '<p>Herramienta de apoyo a la decisión: no sustituye el juicio clínico ni la valoración del comité multidisciplinar de tumores. Las guías recomiendan tratar el carcinoma de Merkel en centros de referencia con experiencia y acceso a ensayos clínicos.</p>' +
-      '<p>Grados: ESMO, nivel de evidencia (I–V) y grado de recomendación (A–E); MCBS, ESMO‑Magnitude of Clinical Benefit Scale. EADO, grado de recomendación (A fuerte, B recomendación, C débil, X no recomendado, GCP buena práctica clínica por consenso) seguido del nivel de evidencia de Oxford (1–5). AEDV, fuerza de recomendación (A–D) según los niveles de Oxford.</p>' +
+      '<p>Grados: NCCN, categorías de evidencia y consenso (2A: evidencia de menor nivel con consenso uniforme; 2B: consenso). ESMO, nivel de evidencia (I–V) y grado de recomendación (A–E); MCBS, ESMO‑Magnitude of Clinical Benefit Scale. EADO, grado de recomendación (A fuerte, B recomendación, C débil, X no recomendado, GCP buena práctica clínica por consenso) seguido del nivel de evidencia de Oxford (1–5). AEDV, fuerza de recomendación (A–D) según los niveles de Oxford.</p>' +
       '<p>Fuentes: Lugowska I, et al. Merkel-cell carcinoma: ESMO‑EURACAN Clinical Practice Guideline for diagnosis, treatment and follow-up. ESMO Open 2024;9(5):102977. Gauci ML, et al. Diagnosis and treatment of Merkel cell carcinoma: European consensus-based interdisciplinary guideline — Update 2022 (EDF/EADO/EORTC). Eur J Cancer 2022;171:203–231. Vázquez Doval J, et al. Carcinoma de células de Merkel: diagnóstico y tratamiento en atención especializada dermatológica. Guía de práctica clínica de la AEDV. Actas Dermosifiliogr 2019;110(6):460–468 (texto completo de 2018). College of American Pathologists. Protocol for the Examination of Specimens from Patients with Merkel Cell Carcinoma of the Skin, versión 4.2.0.0, abril de 2026. AJCC Cancer Staging Manual, 8.ª ed.; UICC TNM Classification of Malignant Tumours, 8.ª y 9.ª ed. (hoja de datos v1.1, diciembre de 2025).</p>' +
-      '<p>Las posiciones de NCCN (National Comprehensive Cancer Network) se recogen tal como las citan EADO 2022, ESMO 2024 y AEDV 2019.</p>' +
+      '<p>NCCN Clinical Practice Guidelines in Oncology: Merkel Cell Carcinoma, versión 1.2027 (8 de octubre de 2026). Se recogen sus recomendaciones de práctica clínica, redactadas de nuevo y sin reproducir sus algoritmos ni figuras; categoría 2A salvo que se indique otra. Consulte el documento original en nccn.org.</p>' +
       '<p>Evidencia posterior (etiqueta «Post‑EADO»): Becker JC, et al. Adjuvant immunotherapy with nivolumab versus observation in completely resected Merkel cell carcinoma (ADMEC‑O). Lancet 2023;402:798–808. Tai P, et al. Immune checkpoint inhibitors in Merkel cell carcinoma of the skin: a 2025 comprehensive review. Cancers 2025;17:3272.</p>' +
       '</div>';
 

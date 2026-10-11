@@ -2,7 +2,7 @@
 
 Herramienta web de apoyo a la decisión clínica para estadificar el carcinoma de
 células de Merkel (CCM) y obtener las recomendaciones de manejo de las guías
-**ESMO‑EURACAN 2024** (European Society for Medical Oncology), **EADO 2022**
+**NCCN 1.2027** (National Comprehensive Cancer Network, octubre de 2026), **ESMO‑EURACAN 2024** (European Society for Medical Oncology), **EADO 2022**
 (European Association of Dermato‑Oncology, con EDF y EORTC) y **AEDV 2019**
 (Academia Española de Dermatología y Venereología), del protocolo anatomopatológico
 **CAP 2026** (College of American Pathologists) y de la evidencia posterior más
@@ -19,7 +19,8 @@ centinela, estado ganglionar, metástasis en tránsito y a distancia) la aplicac
 - **TNM y estadio AJCC‑8 / UICC‑8** (la UICC 9.ª edición mantiene las mismas
   categorías), distinguiendo el estadio **clínico** del **patológico**, con la
   supervivencia global a 5 años de la serie de la AJCC‑8.
-- **Factores de alto riesgo de recidiva** de EADO 2022 (adaptados de NCCN).
+- **Factores de alto riesgo de recidiva** de EADO 2022 y **factores adversos de NCCN 1.2027**
+  (con uno o más, la NCCN propone considerar radioterapia adyuvante).
 - **Actitud tras la exéresis** según el margen clínico y la distancia histológica al margen.
 - **Veredictos** de margen quirúrgico, ganglio centinela, pruebas de imagen,
   radioterapia del lecho, manejo del territorio ganglionar y tratamiento sistémico.
@@ -29,7 +30,7 @@ centinela, estado ganglionar, metástasis en tránsito y a distancia) la aplicac
 - **Evidencia posterior a las guías** (etiqueta «Post‑EADO»): nivolumab adyuvante
   (ADMEC‑O, *Lancet* 2023) y estado de los ensayos fase 3 STAMP y ADAM.
 - **Filtro** para ver todas las recomendaciones o sólo las de una guía
-  (ESMO, EADO, AEDV, AJCC/UICC, CAP, NCCN citada o evidencia posterior).
+  (NCCN, ESMO, EADO, AEDV, AJCC/UICC, CAP o evidencia posterior).
 - **Resumen imprimible** del caso.
 
 ## Uso en el móvil
@@ -65,7 +66,11 @@ certificado y no debe usarse como única base de una decisión asistencial.
 - College of American Pathologists. Protocol for the Examination of Specimens from
   Patients with Merkel Cell Carcinoma of the Skin, v4.2.0.0, abril de 2026.
 - AJCC Cancer Staging Manual, 8.ª ed.; UICC TNM, 8.ª ed., y hoja de datos UICC TNM 9.ª ed. (v1.1, 2025).
-- Las posiciones de NCCN se recogen tal como las citan EADO 2022, ESMO 2024 y AEDV 2019.
+- NCCN Clinical Practice Guidelines in Oncology: Merkel Cell Carcinoma, versión 1.2027
+  (8 de octubre de 2026). Se recogen sus recomendaciones de práctica clínica (estudio inicial,
+  anatomía patológica, cirugía, radioterapia con dosis, manejo ganglionar, preferencias de
+  tratamiento sistémico y seguimiento), redactadas de nuevo y sin reproducir sus algoritmos ni
+  figuras. Consulte el documento original en nccn.org.
 - Evidencia posterior: Becker JC, et al. ADMEC‑O. *Lancet* 2023;402:798–808.
   Tai P, et al. *Cancers* 2025;17:3272.
 
